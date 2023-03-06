@@ -1,0 +1,78 @@
+1. MongoDB
+2. Robo3T
+
+3. Dependencies from https://github.com/tabvn/es6-expressjs
+    "dependencies": {
+        "body-parser": "^1.18.2",
+        "cors": "^2.8.4",
+        "express": "^4.16.2",
+        "json5": "^2.2.3",
+        "mongodb": "^4.2.0",
+        "morgan": "^1.9.0"
+    },
+    "devDependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-core": "^6.26.0",
+        "babel-preset-env": "^1.6.1",
+        "babel-preset-stage-0": "^6.24.1",
+        "eslint": "^8.34.0",
+        "nodemon": "^2.0.20"
+    }
+4. Configure index.js, database.js and router.js
+
+5. postman
+
+6. npm install multer --save
+
+7. Configure for upload POST and download GET
+
+8. Make model for database saving
+
+9. npm install lodash --save
+
+10. Configure file.js for model dataset for database
+
+11. connect all
+
+
+
+{
+  "name": "app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "axios": "^0.17.0",
+    "classnames": "^2.3.2",
+    "lodash": "^4.17.21",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

@@ -1,0 +1,423 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;800&display=swap');
+@import "reset";
+@import "variable";
+@import "font";
+
+body{
+    font-family: 'Open Sans', sans-serif;
+    background-color: $primary-color;
+    color: $body-text-color;
+    font-size: 12px;
+}
+
+a{
+    color: $primary-color;
+    text-decoration: none;
+}
+
+*{
+    box-sizing: border-box;
+}
+
+.app-layout{
+    max-width: 1000px;
+    margin: 0 auto;
+    @media(min-width: $screen-md){
+        padding: 100px 50px 50px 50px;
+    }
+}
+
+.app-container{
+    position: relative;
+    overflow: hidden;
+    padding: 20px 0 0 0;
+    .app-header{
+        padding-bottom: 30px;
+        text-align: center;
+        .app-site-info{
+            color: white;
+            h1{
+                margin: 0;
+                padding: 0;
+                font-size: 60px;
+                font-weight: 800;
+            }
+            .site-title{
+                margin: 20px 0 0 0;
+                padding: 0;
+                font-size: 50px;
+                font-weight: 300;
+                color: rgba(255,255,255,.9);
+                @media(max-width: $screen-sm){
+                    display: none;
+                }
+            }
+            .site-slogan{
+                margin-top: 5px;
+                padding: 0;
+                font-size: 30px;
+                font-weight: 300;
+                color: rgba(255,255,255,.5);
+                @media(max-width: $screen-sm){
+                    display: none;
+                }
+            }
+        }
+    }
+
+    .app-content{
+        
+    }
+
+    @media(min-width: $screen-md){
+        
+        .app-header{
+            float: left;
+            padding-top: 100px;
+            text-align: left;
+        }
+        .app-content{
+            float:right;
+        }
+    }
+}
+
+.app-card{
+    overflow: hidden;
+    position: relative;
+    background: white;
+    border-radius: 5px;
+    @media (min-width: $screen-sm) {
+        width: 350px;
+    }
+    .app-card-header{
+        background-color: rgba(243, 247, 255,1);
+        .app-card-header-inner{
+            padding: 20px;
+        }
+    }
+    .app-card-content{
+        .app-card-content-inner{
+            padding: 25px;
+        }
+    }
+    &.app-card-uploading{
+        .app-card-content{
+            .app-card-content-inner{
+                padding: 40px;
+            }
+        }
+    }
+}
+
+.app-file-select-zone{
+    width: 100%;
+    display: block;
+    text-align: center;
+    label{
+        display: block;
+        width: 100%;
+        input{
+            position: fixed;
+            top:-9999px;
+        }
+    }
+    .app-upload-description{
+        font-size: 12px;
+        display: block;
+    }
+    .app-upload-icon{
+        display: inline-block;
+        margin-bottom: 10px;
+        width: 60px;
+        height: 30px;
+        border: 1px dashed $body-text-color;
+        position: relative;
+        i{
+            font-size: 28px;
+            position: absolute;
+            left: 10px;
+            top: -10px;
+            background-color: #f3f7ff;
+        }
+    }
+    &.error{
+        .app-upload-icon{
+            border-color: $danger-color;
+        }
+    }
+}
+
+.app-form-item{
+    margin: 0 0 15px 0;
+    label{
+        text-transform: uppercase;
+        display: block;
+        font-weight: 400;
+        margin: 0 0 8px 0;
+    }
+    input[type='text'], textarea{
+        width: 100%;
+        border: 1px solid rgba(224, 224, 224,1);
+        outline: 0 none;
+        padding: 8px;
+        border-radius: 5px;
+        &:focus,:active{
+            outline: 0 none;
+        }
+    }
+    textarea{
+        min-height: 50px;
+    }
+    &.error{
+        input{
+            color: $danger-color;
+        }
+    }
+}
+
+.app-form-action{
+    .app-button{
+        width: 100%;
+        text-align: center;
+        display: block;
+        font-weight: 700;
+        color: $primary-color;
+        background-color: white;
+        border: 1px solid $primary-color;
+        border-radius: 5px;
+        padding: 10px 15px;
+        text-transform: uppercase;
+        &.primary{
+            background-color: $primary-color;
+            color: white;
+        }
+    }
+}
+
+.app-files-selected{
+    max-height: 150px;
+    position: relative;
+    overflow-y: auto;
+    background-color: white;
+    position: relative;
+    margin: -20px -20px 20px -20px;
+    padding: 20px;
+    .app-files-selected-item{
+        display: flex;
+        border-bottom: 1px solid rgba(0,0,0,0.09);
+        padding: 10px 0;
+        .filename{
+            flex-grow: 1;
+        }
+        .file-action{
+
+        } 
+    }
+    .app-file-remove{
+        border: 0 none;
+        padding: 3px;
+        font-size: 14px;
+        font-weight: 300;
+        background: none;
+    }
+}
+
+.text-uppercase{
+    text-transform: uppercase;
+}
+
+.error{
+    color: $danger-color;
+}
+
+.app-home-uploading-icon{
+    text-align: center;
+    display: block;
+    i{
+        font-size: 60px;
+        display: inline-block;
+        border: 1px solid $body-text-color;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        line-height: 100px;
+    }
+    h2{
+        margin: 20px 0 0 0;
+        font-size: 17px;
+        
+    }
+}
+
+.app-upload-files-total{
+    margin-top: 20px;
+}
+
+.app-upload-stats{
+    display: flex;
+    flex-direction: row;
+    .app-upload-stats-left{
+        flex-grow: 1;
+    }
+    .app-upload-stats-right{
+        
+    }
+}
+
+.app-progress{
+    background-color: rgba(241,248,254,1);
+    border: 1px solid rgba(178, 216, 248,1);
+    height: 15px;
+    line-height: 15px;
+    width: 100%;
+    border-radius: 10px;
+    margin: 10px 0 10px 0;
+    position: relative;
+    overflow: hidden;
+    .app-progress-bar{
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0px;
+        height: 15px;
+        line-height: 15px;
+        background-color: $primary-color;
+    }
+}
+
+.app-upload-cancel-button{
+    margin-top: 50px;
+}
+
+.app-text-center{
+    text-align: center;
+}
+
+.app-upload-sent-message{
+    margin-top: 20px;
+    h2{
+        font-size: 25px;
+        font-weight: 300;
+        padding: 0;
+        margin: 20px 0;
+    }
+    p{
+        line-height: 1.5em;
+    }
+}
+
+.app-upload-sent-action{
+    margin: 20px  0;
+    button{
+        margin:10px 0;
+    }
+}
+
+.app-page-download{
+    .app-card{
+        @media(min-width: $screen-sm){
+            width: 400px;
+        }
+        margin: 0 auto;
+    }
+}
+.app-top-header{
+    text-align: center;
+    color: white;
+    h1{
+        margin: 0;
+        padding: 0;
+        font-size: 50px;
+        font-weight: 600;
+    }  
+    margin-bottom: 20px;
+}
+
+.app-download-icon{
+    text-align: center;
+    i{
+        font-size: 50px;
+        color: $body-text-color;
+        text-align: center;
+        display: inline-block;
+        border: 1px solid $body-text-color;
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
+        border-radius: 50%;
+    }
+}
+
+.app-download-message{
+    margin-top: 30px;
+    h2{
+        font-size: 20px;
+        margin: 20px 0;
+    }
+    ul{
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        li{
+            margin: 0 10px 0 0;
+            padding: 0 0 0 10px;
+            display: inline-block;
+            position: relative;
+            &:before{
+                position: absolute;
+                display: block;
+                top: 5px;
+                left: 0;
+                content: '';
+                width: 4px;
+                height: 4px;
+                background-color: $body-text-color;
+                border-radius: 50%;
+            }
+            &:first-child{
+                padding: 0;
+                &:before{
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+.app-download-file-list{
+    margin: 30px 0;
+    .app-download-file-list-item{
+        border-bottom: 1px solid rgba(227,234,248,1);
+        padding: 10px 5px;
+        display: flex;
+        .filename{
+        flex-grow: 1;
+
+        }
+        .download-action{
+            a{
+                color: $primary-color;
+                text-decoration: none;
+            }
+        }
+    }
+}
+
+.app-download-action{
+    button{
+        margin: 10px 0;
+    }
+}
+
+.app-top-header{
+    h1{
+        cursor: pointer;
+    }
+}
+.app-card-inbox-header{
+    h1{
+        font-size: 36px;
+
+    }
+}
