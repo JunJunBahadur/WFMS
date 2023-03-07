@@ -5,13 +5,19 @@ import _ from 'lodash';
 export const upload = (form, callback = () => {}) => {
     const url = `${apiUrl}/upload`;
     let files = _.get(form, 'files', []);
+    let to = _.get(form, 'to', []);
 
     let data = new FormData();
+
     _.each(files, (file) => {
         data.append('files', file);
     });
 
-    data.append('to', _.get(form, 'to'));
+    _.each(to, (eachTo) => {
+        data.append('to', eachTo);
+    });
+
+    //data.append('to', _.get(form, 'to'));
     data.append('from', _.get(form, 'from'));
     data.append('message', _.get(form, 'message'));
 

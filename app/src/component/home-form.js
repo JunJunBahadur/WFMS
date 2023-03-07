@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import _ from 'lodash';
 import classNames from 'classnames';
 import { upload } from "../helpers/upload";
-import PropTypes from 'prop-types';
+import PropTypes, { number } from 'prop-types';
 import { sessionCollect } from "../helpers/sessionCollect";
 
 
@@ -12,9 +12,11 @@ class HomeForm extends Component{
         super(props);
 
         this.state = {
+            counter: 0,
             form: {
                 files: [],
-                to: '',
+                to: [],
+                numberOfTo: 0,
                 from: '',
                 subject: '',
                 message: ''
@@ -33,6 +35,8 @@ class HomeForm extends Component{
         this._formValidation = this._formValidation.bind(this);
         this._onFileAdded = this._onFileAdded.bind(this);
         this._onFileRemove = this._onFileRemove.bind(this);
+        this._onAddingTo = this._onAddingTo.bind(this);
+        this._onTextChangeForTo = this._onTextChangeForTo.bind(this);
     }
 
     componentDidMount(){
@@ -45,6 +49,14 @@ class HomeForm extends Component{
         });
     }
 
+    _onAddingTo(){
+        let {counter} = this.state;
+        const newCount = counter + 1;
+        this.setState({
+            counter: newCount
+        })
+    }
+    
     _onFileRemove(key){
         let {files} = this.state.form;
         files.splice(key, 1);
@@ -56,6 +68,7 @@ class HomeForm extends Component{
             }
         })
     }
+
     _onFileAdded(event){
         let files = _.get(this.state, 'form.files', []);
 
@@ -75,14 +88,16 @@ class HomeForm extends Component{
         });
 
     }
-    _isEmail(emailAddress){
+    _isEmail(emailAddresses){
         // eslint-disable-next-line
         const emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-        return emailRegex.test(emailAddress);
+        
+        console.log('Email validation:',emailAddresses);
+        return emailRegex.test(emailAddresses);
     }
 
     _formValidation(fields = [], callback = () => {}){
-        let {form, errors} = this.state;
+        let {form, counter, errors} = this.state;
         
         const validations = {
             from: [
@@ -106,12 +121,13 @@ class HomeForm extends Component{
                         return form.to.length;
                     }
                 },
-                {
+               /* ADD EMAIL VALIDATION LATER
+                    {
                     errorMessage: 'Email is not valid.',
                     isValid: () => {
                         return this._isEmail(form.to);
                     }
-                }
+                }*/
             ],
             files: [
                 {
@@ -121,7 +137,16 @@ class HomeForm extends Component{
                     }
                 }
             ]
-        }
+        };
+        _.each(form.to.length, (count) => {
+            console.log('count at validation:',count);
+        });
+/*  EMAIL VALIDATION
+        [...Array(this.state.form.to.length)].forEach((_,i)=>{
+            console.log(i);
+
+        });
+*/
         _.each(fields, (field) => {
             let fieldValidations = _.get(validations, field, []); 
             
@@ -180,9 +205,19 @@ class HomeForm extends Component{
         this.setState({form: form})
     }
 
+    _onTextChangeForTo(counter, event){
+        let {form} =  this.state;
+
+        const fieldValue = event.target.value;
+
+        let to = _.get(form, 'to');
+        to[counter] = fieldValue;
+        this.setState({form: form})
+    }
+
     render(){
-        const {form, errors} = this.state;
-        const {files} = form;
+        const {form, counter, errors} = this.state;
+        const {files, to} = form;
         return(
             <div className='app-card'>
                 <form onSubmit={this._onSubmit}>
@@ -223,11 +258,28 @@ class HomeForm extends Component{
 
                             <div className={classNames("app-form-item", {'error': _.get(errors,'to')})}>
                                 <label htmlFor="to">Send to</label>
-                                <input onChange={this._onTextChange} value={form.to} name="to" placeholder={_.get(errors, 'to') ? _.get(errors, 'to') : 'Email address'} type='text' id='to' />
+                                <input onChange={(event) => this._onTextChangeForTo(0,event)}  name="to" placeholder={_.get(errors, 'to') ? _.get(errors, 'to') : 'Email address'} type='text' id='to' />
+                            </div>
+
+                            <div className="app-to-selected">
+                                {
+
+                                    Array.from(Array(counter)).map((c, index) => {
+                                        return (
+                                            <div key={index} className="app-form-item">
+                                                <input onChange={(event) => this._onTextChangeForTo(index+1,event)} type='text' placeholder={index+1}></input>
+                                            </div>
+                                        )
+                                    })
+                                }
+                                <div className="app-form-item">
+                                    <button type="button" onClick={this._onAddingTo}>+Add next signer</button>
+                                </div>
+
                             </div>
 
                             <div className="app-form-item">
-                                <label htmlFor="to">Subject</label>
+                                <label htmlFor="subject">Subject</label>
                                 <input onChange={this._onTextChange} value={_.get(form, 'subject', '')} name="subject" placeholder='Add subject' type='text' id='subject' />
                             </div>
                             
