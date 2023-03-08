@@ -3,17 +3,17 @@ import { useParams } from 'react-router-dom';
 import _ from 'lodash';
 import { getDownloadInfo } from '../helpers/download';
 import { apiUrl } from '../config';
-import { betterNumber } from '../helpers/index'
+
 import { useNavigate } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { userSign } from '../helpers/userSign';
 
 function WithNavigate(props) {
     let navigate = useNavigate();
-    return <HomeViewFile {...props} navigate={navigate} />
+    return <HomeViewStatus {...props} navigate={navigate} />
 }
 
-class HomeViewFile extends Component{
+class HomeViewStatus extends Component{
     constructor(props){
         super(props);
 
@@ -21,9 +21,6 @@ class HomeViewFile extends Component{
             post: null,
             data: null
         }
-
-        this.getTotalDownloadSize = this.getTotalDownloadSize.bind(this);
-        this._onSignFile = this._onSignFile.bind(this);
     }
 
     componentDidMount(){
@@ -40,34 +37,15 @@ class HomeViewFile extends Component{
         })
     }
 
-    _onSignFile(id){
-        userSign(id);
-        if(this.props.onUserSign){
-            this.props.onUserSign(id);
-        }
-    }
-
-    getTotalDownloadSize(){
-        const {post} = this.state;
-        let total = 0;
-
-        const files = _.get(post, 'files', []);
-        _.each(files, (file)=> {
-            total = total + _.get(file, 'size', 0);
-        })
-        
-        return betterNumber(total);
-    }
 
     render(){
-
         const { post } = this.state;
-        const files = _.get(post, 'files', []);
+        const to = _.get(post, 'to', []);
+        console.log('typeof',typeof(to),'value',post);
         const postId = _.get(post, '_id', null);
-        const totalSize = this.getTotalDownloadSize();
+        const signer = _.get(post, 'signer', null);
 
         return(
-            <div className="app-page-download">
                 <div className='app-card app-card-download'>
                     <div className='app-card-content'>
                         <div className='app-card-content-inner'>
@@ -76,44 +54,46 @@ class HomeViewFile extends Component{
                             </div>
 
                             <div className='app-download-message app-text-center'>
-                                <h2>Ready to download</h2>
+                                <h2>Your status</h2>
                                 <ul>
-                                    <li>{files.length} files</li>
-                                    <li>{totalSize}</li>
+                                    <li>{signer} Approved</li>
                                     <li>Expires in 30 days</li>
                                 </ul>
                             </div>
                             <div className='app-download-file-list'>
                                 {
-                                    files.map((file, index) => {
+                                    to.map((file, index) => {
                                         return(
                                             <div key={index} className='app-download-file-list-item'>
-                                                <div className='filename'>{_.get(file, 'originalName')}</div>
-                                                <div className='download-action'><a href={`${apiUrl}/download/${_.get(file, '_id')}`}>Download</a></div>
+                                                <div className='filename'>{file}</div>
+                                                <div className='download-action'>{
+                                                    index < signer ? <div>Approved</div> : <div>Not yet Approved</div>
+                                                }</div>
                                             </div>
                                         )
                                     })
                                 }
                             </div>
-                            
-                            <div className='app-download-action app-form-action'>
-                                <a href={`${apiUrl}/posts/${postId}/download`} className='app-button primary' >Download All</a>
-                                <button onClick={()=>{
-                                    this._onSignFile(postId);
-                                    }} className='app-button' type='button'>Approve</button>
-                            </div>
+                        
                         </div>
                     </div>
                 </div>
-            </div>
         )
     }
 }
 
-HomeViewFile.propTypes = {
-    data: PropTypes.string,
-    onUserSign: PropTypes.func
+HomeViewStatus.propTypes = {
+    data: PropTypes.string
 }
 
 export default WithNavigate;
 //export default withParams(View);
+/*
+
+signer 1 => to[0] has signed
+signer 2 => to[1] has signed
+signer 3 => to[2] has signed
+signer 3 => to[3] has not signed
+
+
+*/

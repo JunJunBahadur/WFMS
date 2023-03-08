@@ -5,6 +5,8 @@ import HomeUploading from '../component/home-uploading';
 import HomeUploadSent from '../component/home-upload-sent';
 import HomeInbox from '../component/home-inbox';
 import HomeViewFile from '../component/home-view-file';
+import HomeSent from '../component/home-sent';
+import HomeViewStatus from '../component/home-view-status';
 import _ from 'lodash';
 
 class Home extends Component{
@@ -50,6 +52,19 @@ class Home extends Component{
                     })
                 }} data={data} />
 
+            case 'HomeSent':
+                
+                return <HomeSent 
+                    onViewStatus={(data)=>{
+                        this.setState({
+                            data: data,
+                            componentName: 'HomeViewStatus',
+                        });
+                    }} />
+
+            case 'HomeViewStatus':
+                return <HomeViewStatus data={data} />
+
             case 'HomeForm':
 
                 return <HomeForm 
@@ -75,19 +90,24 @@ class Home extends Component{
 
             case 'HomeViewFile':
 
-                return <HomeViewFile data={data} />
-                
+                return <HomeViewFile onUserSign={(data)=>{
+                    this.setState({
+                        data: data,
+                        componentName: '',
+                    });
+                }} data={data} />
 
             default:
                 
                 return <HomeInbox 
-                    onViewPost={(data)=>{
-                        this.setState({
-                            data: data,
-                            componentName: 'HomeViewFile',
-                        });
-                    }}
+                onViewPost={(data)=>{
+                    this.setState({
+                        data: data,
+                        componentName: 'HomeViewFile',
+                    });
+                }}
                 />
+                
                 
         }
     }
@@ -106,6 +126,12 @@ class Home extends Component{
                     toInbox={()=>{
                         this.setState({
                             componentName: ''
+                        })
+                    }}
+
+                    toSent={()=>{
+                        this.setState({
+                            componentName: 'HomeSent'
                         })
                     }}
                     

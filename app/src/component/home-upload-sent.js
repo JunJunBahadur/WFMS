@@ -45,28 +45,37 @@ class HomeUploadSent extends Component{
         const postId = _.get(data, '_id');
 
         return(
-            <div className='app-card app-card-upload-sent'>
-                <div className='app-card-content'>
-                    <div className='app-card-content-inner'>
-                        <div className="app-home-uploading">
-                            <div className="app-home-uploading-icon">
-                                <i className="icon-upload-cloud" />
-                            </div>
-                            <div className="app-upload-sent-message app-text-center">
-                                <h2>Files Sent!</h2>
-                                <p>We've sent a email to {to} with a download link.</p>
-                            </div>
+            <div className="app-page-download">
+                <div className='app-card app-card-upload-sent'>
+                    <div className='app-card-content'>
+                        <div className='app-card-content-inner'>
+                            <div className="app-home-uploading">
+                                <div className="app-home-uploading-icon">
+                                    <i className="icon-upload-cloud" />
+                                </div>
+                                <div className="app-upload-sent-message app-text-center">
+                                    <h2>Files Sent!</h2>
+                                    <div>We've sent a email to {'\n'}</div>
+                                    {
+                                    to.map((file, index)=>{
+                                        return(
+                                            <div key={index}>{file}</div>
+                                        )
+                                    })}
+                                    <div> with a download link.</div>
+                                </div>
 
-                            <div className="app-upload-sent-action app-form-action">
-                                <button onClick={()=>{
+                                <div className="app-upload-sent-action app-form-action">
+                                    <button onClick={()=>{
 
-                                    this.props.navigate(`/share/${postId}`);
-                                }} className="app-button primary" type="button">View File</button>
-                                <button onClick={()=>{
-                                    if(this.props.onSendAnotherFile){
-                                        this.props.onSendAnotherFile(true);
-                                    }
-                                }} className="app-button" type="button">Send another file</button>
+                                        this.props.navigate(`/share/${postId}`);
+                                    }} className="app-button primary" type="button">View File</button>
+                                    <button onClick={()=>{
+                                        if(this.props.onSendAnotherFile){
+                                            this.props.onSendAnotherFile(true);
+                                        }
+                                    }} className="app-button" type="button">Send another file</button>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -1,4 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap');
+
+
 @import "reset";
 @import "variable";
 @import "font";
@@ -20,10 +24,10 @@ a{
 }
 
 .app-layout{
-    max-width: 1000px;
+    max-width: 1600px;
     margin: 0 auto;
     @media(min-width: $screen-md){
-        padding: 100px 50px 50px 50px;
+        padding: 70px 50px 50px 50px;
     }
 }
 
@@ -39,15 +43,18 @@ a{
             h1{
                 margin: 0;
                 padding: 0;
-                font-size: 60px;
-                font-weight: 800;
+                font-size: 45px;
+                font-weight: 400;
+                margin-bottom: 20px;
+                font-family: 'Tilt Warp', cursive;
             }
             .site-title{
                 margin: 20px 0 0 0;
                 padding: 0;
-                font-size: 50px;
+                font-size: 30px;
                 font-weight: 300;
                 color: rgba(255,255,255,.9);
+                margin-bottom: 7px;
                 @media(max-width: $screen-sm){
                     display: none;
                 }
@@ -55,8 +62,8 @@ a{
             .site-slogan{
                 margin-top: 5px;
                 padding: 0;
-                font-size: 30px;
-                font-weight: 300;
+                font-size: 18px;
+                font-weight: 400;
                 color: rgba(255,255,255,.5);
                 @media(max-width: $screen-sm){
                     display: none;
@@ -98,8 +105,22 @@ a{
     }
     .app-card-content{
         .app-card-content-inner{
-            padding: 25px;
+            padding: 70px;
+            &.form{
+                padding-bottom: 50px;
+                display: flex;
+                justify-content: space-between;
+                .app-card-content-inner-left{
+                    width: 500px;
+                    float: left;
+                }
+                .app-card-content-inner-right{
+                    width: 500px;
+                    float: right;
+                }
+            }
         }
+        
     }
     &.app-card-uploading{
         .app-card-content{
@@ -112,6 +133,10 @@ a{
 
 .app-file-select-zone{
     width: 100%;
+    height: 400px;
+    &.smaller{
+        height: 260px;
+    }
     display: block;
     text-align: center;
     label{
@@ -120,6 +145,27 @@ a{
         input{
             position: fixed;
             top:-9999px;
+        }
+    }
+    #input-file{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        .app-button-emulate{
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            p{
+                border: 1px solid $body-text-color;
+                border-radius: 3px;
+                background-color: rgba($color: #000000, $alpha: 0.07);
+                width: 70px;
+                &:hover{
+                    background-color: $body-text-color;
+                    color: white;
+                }
+            }
         }
     }
     .app-upload-description{
@@ -177,6 +223,7 @@ a{
 }
 
 .app-form-action{
+    margin: 0 100px 40px 100px;
     .app-button{
         width: 100%;
         text-align: center;
@@ -196,7 +243,7 @@ a{
 }
 
 .app-files-selected{
-    max-height: 150px;
+    height: 150px;
     position: relative;
     overflow-y: auto;
     background-color: white;
@@ -317,7 +364,8 @@ a{
 .app-page-download{
     .app-card{
         @media(min-width: $screen-sm){
-            width: 400px;
+            width: 1200px;
+            height: 800px;
         }
         margin: 0 auto;
     }
@@ -404,6 +452,90 @@ a{
     }
 }
 
+.app-inbox-file-list{
+    margin: 30px 0;
+    .app-inbox-file-list-item{
+        border-bottom: 1px solid rgba(227,234,248,1);
+        padding: 10px 5px;
+        display: flex;
+        align-items: center;
+        font-size: 15px;
+        .username{
+            width: 350px;
+        }
+        .subject{
+            flex-grow: 1;
+        }
+        .download-action{
+            a{
+                color: $primary-color;
+                text-decoration: none;
+            }
+        }
+        .app-button{
+            width: 120px;
+            text-align: center;
+            display: block;
+            font-weight: 700;
+            color: $primary-color;
+            background-color: white;
+            border: 1px solid $primary-color;
+            border-radius: 5px;
+            padding: 10px 15px;
+            text-transform: uppercase;
+            &.primary{
+                background-color: $primary-color;
+                color: white;
+            }
+            &:hover{
+                color: $primary-color;
+                background-color: white;
+            }
+        }
+    }
+}
+
+.app-sent-file-list{
+    margin: 30px 0;
+    .app-sent-file-list-item{
+        border-bottom: 1px solid rgba(227,234,248,1);
+        padding: 10px 5px;
+        display: flex;
+        align-items: center;
+        font-size: 15px;
+        .subject{
+            width: 350px;
+            flex-grow: 1;
+        }
+        .download-action{
+            a{
+                color: $primary-color;
+                text-decoration: none;
+            }
+        }
+        .app-button{
+            width: 120px;
+            text-align: center;
+            display: block;
+            font-weight: 700;
+            color: $primary-color;
+            background-color: white;
+            border: 1px solid $primary-color;
+            border-radius: 5px;
+            padding: 10px 15px;
+            text-transform: uppercase;
+            &.primary{
+                background-color: $primary-color;
+                color: white;
+            }
+            &:hover{
+                color: $primary-color;
+                background-color: white;
+            }
+        }
+    }
+}
+
 .app-download-action{
     button{
         margin: 10px 0;
@@ -420,4 +552,38 @@ a{
         font-size: 36px;
 
     }
+}
+
+.app-header-nav-bar{
+    margin-top: 10px;
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: auto;
+    button{
+        width: 100%;
+        text-align: center;
+        display: block;
+        font-weight: 700;
+        color: $primary-color;
+        margin-top: 5px;
+        background-color: white;
+        border: 1px solid white;
+        border-radius: 5px;
+        padding: 10px 15px;
+        text-transform: uppercase;
+        &.primary{
+            background-color: $primary-color;
+            color: white;
+        }
+        &:hover{
+            background-color: $primary-color;
+            color: white;
+        }
+
+    }
+}
+
+.app-to-selected{
+    height: 100px;
+    overflow: scroll;
 }

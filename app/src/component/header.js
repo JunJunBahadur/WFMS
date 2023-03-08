@@ -45,23 +45,27 @@ class Header extends Component{
         return(
             <div className="app-header">
                 <div className="app-site-info">
-                    <h1><i className={"icon-paper-plane"} />KCT-WM</h1>
-                    <div className="site-title">Sign Your File</div>
+                    <h1>Chain Flow</h1>
+                    <div className="site-title">Welcome,</div>
                     <div className="site-slogan">{`${email}`}</div>
+                    
+                </div>
+                <div className="app-header-nav-bar">
+                    <button onClick={()=>{
+                        this.props.toSendForm();
+                    }}>Create</button>
+                    <button onClick={()=>{
+                        this.props.toInbox();
+                    }}>Inbox</button>
+                    <button onClick={()=>{
+                        this.props.toSent();
+                    }}>Sent</button>
                     <button onClick={()=>{
                         localStorage.removeItem('login');
                         this.PublicClientApplication.logoutRedirect();
                         window.location.reload();
                         //this.props.navigate(`/`);
                     }} type="button" className="app-button">Logout</button>
-                </div>
-                <div className="app-header-nav-bar">
-                    <button onClick={()=>{
-                        this.props.toSendForm();
-                    }}>Send</button>
-                    <button onClick={()=>{
-                        this.props.toInbox();
-                    }}>Inbox</button>
                 </div>
                
             </div>

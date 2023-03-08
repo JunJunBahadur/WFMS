@@ -5,7 +5,14 @@ import _ from 'lodash';
 export const upload = (form, callback = () => {}) => {
     const url = `${apiUrl}/upload`;
     let files = _.get(form, 'files', []);
-    let to = _.get(form, 'to', []);
+    let toArray = _.get(form, 'to', []);
+    let to = {};
+    let i = 0;
+    _.each(toArray, (t) => {
+        to[i]=t;
+        i=i+1;
+    })
+    to[i+1]='';
 
     let data = new FormData();
 
@@ -16,10 +23,12 @@ export const upload = (form, callback = () => {}) => {
     _.each(to, (eachTo) => {
         data.append('to', eachTo);
     });
-
+    const signer = 0;
     //data.append('to', _.get(form, 'to'));
     data.append('from', _.get(form, 'from'));
     data.append('message', _.get(form, 'message'));
+    data.append('signer', signer);
+    data.append('subject', _.get(form, 'subject'));
 
     const config = {
         onUploadProgress: (event) => {

@@ -129,6 +129,14 @@ class HomeForm extends Component{
                     }
                 }*/
             ],
+            subject: [
+                {
+                    errorMessage: 'Subject is requried.',
+                    isValid: () => {
+                        return form.subject.length;
+                    }
+                }
+            ],
             files: [
                 {
                     errorMessage: 'File is required',
@@ -175,7 +183,7 @@ class HomeForm extends Component{
 
     _onSubmit(event){
         event.preventDefault();
-        this._formValidation(['from','to','files'], (isValid) => {
+        this._formValidation(['from','to','files','subject'], (isValid) => {
             
             if(isValid){
 
@@ -212,6 +220,7 @@ class HomeForm extends Component{
 
         let to = _.get(form, 'to');
         to[counter] = fieldValue;
+        
         this.setState({form: form})
     }
 
@@ -219,6 +228,7 @@ class HomeForm extends Component{
         const {form, counter, errors} = this.state;
         const {files, to} = form;
         return(
+            <div className="app-page-download">
             <div className='app-card'>
                 <form onSubmit={this._onSubmit}>
                     <div className='app-card-header'>
@@ -239,14 +249,15 @@ class HomeForm extends Component{
                                         }
                                         </div>) : null          
                             }
-                            <div className={classNames("app-file-select-zone",{'error': _.get(errors,'files')})}>
+                            <div className={classNames("app-file-select-zone",{'error': _.get(errors,'files')},{'smaller': files.length})}>
                                 <label id='input-file'>
                                     <input onChange={this._onFileAdded} id='input-file' type='file' multiple={true} />
                                     {
-                                        files.length ? <span className="app-upload-description text-uppercase">Add more files</span> : 
+                                        files.length ? <span className="app-upload-description text-uppercase smaller">Add more files</span> : 
                                         <span>
                                             <span className="app-upload-icon"><i className="icon-picture-streamline" /></span>
                                             <span className="app-upload-description">Drag and drop your files here.</span>
+                                            <span className="app-button-emulate"><p>Browse</p></span>
                                         </span>
                                     }
                                 </label>
@@ -254,46 +265,49 @@ class HomeForm extends Component{
                         </div>
                     </div>
                     <div className='app-card-content'>
-                        <div className='app-card-content-inner'>
+                        <div className='app-card-content-inner form'>
+                            <div className="app-card-content-inner-left">
+                                <div className={classNames("app-form-item", {'error': _.get(errors,'to')})}>
+                                    <label htmlFor="to">Send to</label>
+                                    <input onChange={(event) => this._onTextChangeForTo(0,event)}  name="to" placeholder={_.get(errors, 'to') ? _.get(errors, 'to') : 'Email address'} type='text' id='to' />
+                                </div>
 
-                            <div className={classNames("app-form-item", {'error': _.get(errors,'to')})}>
-                                <label htmlFor="to">Send to</label>
-                                <input onChange={(event) => this._onTextChangeForTo(0,event)}  name="to" placeholder={_.get(errors, 'to') ? _.get(errors, 'to') : 'Email address'} type='text' id='to' />
+                                <div className="app-to-selected">
+                                    {
+
+                                        Array.from(Array(counter)).map((c, index) => {
+                                            return (
+                                                <div key={index} className="app-form-item">
+                                                    <input onChange={(event) => this._onTextChangeForTo(index+1,event)} type='text' placeholder={index+1}></input>
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                    <div className="app-form-item">
+                                        <button type="button" onClick={this._onAddingTo}>+Add next signer</button>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div className="app-to-selected">
-                                {
-
-                                    Array.from(Array(counter)).map((c, index) => {
-                                        return (
-                                            <div key={index} className="app-form-item">
-                                                <input onChange={(event) => this._onTextChangeForTo(index+1,event)} type='text' placeholder={index+1}></input>
-                                            </div>
-                                        )
-                                    })
-                                }
+                            <div className='app-card-content-inner-right'>
+                                <div className={classNames("app-form-item", {'error': _.get(errors,'subject')})}>
+                                    <label htmlFor="subject">Subject</label>
+                                    <input onChange={this._onTextChange} value={_.get(form, 'subject', '')} name="subject" placeholder={_.get(errors, 'subject') ? _.get(errors, 'subject') : 'Enter subject of your application.'} type='text' id='subject' />
+                                </div>
+                                
                                 <div className="app-form-item">
-                                    <button type="button" onClick={this._onAddingTo}>+Add next signer</button>
+                                    <label htmlFor="message">MESSAGE</label>
+                                    <textarea onChange={this._onTextChange} value={_.get(form, 'message', '')} placeholder='Add a note (Optional)' id="message" name="message" />
                                 </div>
 
                             </div>
-
-                            <div className="app-form-item">
-                                <label htmlFor="subject">Subject</label>
-                                <input onChange={this._onTextChange} value={_.get(form, 'subject', '')} name="subject" placeholder='Add subject' type='text' id='subject' />
-                            </div>
-                            
-                            <div className="app-form-item">
-                                <label htmlFor="message">MESSAGE</label>
-                                <textarea onChange={this._onTextChange} value={_.get(form, 'message', '')} placeholder='Add a note (Optional)' id="message" name="message" />
-                            </div>
-
-                            <div className="app-form-action">
-                                <button type='submit' className="app-button primary">Send</button>
-                            </div>
+                        </div>
+                        <div className="app-form-action">
+                            <button type='submit' className="app-button primary">Send</button>
                         </div>
                     </div>
                 </form>
+            </div>
             </div>
         )
     }

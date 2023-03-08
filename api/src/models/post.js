@@ -8,8 +8,10 @@ class Post{
 
         this.model = {
             from: null,
-            to: null,
+            to: [],
             message: null,
+            signer: 0,
+            subject: null,
             files: [],
             created: new Date(),
         }
@@ -17,8 +19,9 @@ class Post{
 
     initWithObject(obj){
         this.model.from = _.get(obj, 'from');
-        this.model.to = _.get(obj, 'to');
+        this.model.to = _.get(obj, 'to', []);
         this.model.message = _.get(obj, 'message');
+        this.model.subject = _.get(obj, 'subject');
         this.model.files = _.get(obj, 'files', []);
         this.model.created = _.get(obj, 'created', new Date());
 
