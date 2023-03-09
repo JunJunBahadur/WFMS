@@ -41,16 +41,21 @@ class HomeViewStatus extends Component{
     render(){
         const { post } = this.state;
         const to = _.get(post, 'to', []);
+        to.pop();
         console.log('typeof',typeof(to),'value',post);
         const postId = _.get(post, '_id', null);
         const signer = _.get(post, 'signer', null);
 
+        console.log('Signer:',signer,' To length:',to.length);
         return(
+            <div className="app-page-download">
                 <div className='app-card app-card-download'>
                     <div className='app-card-content'>
                         <div className='app-card-content-inner'>
-                            <div className='app-download-icon'>
-                                <i className='icon-download' />
+                            <div className='app-status-icon'>
+                                {
+                                    signer < to.length ? <i className='icon-dot-3' /> : <i className='icon-check' />
+                                } 
                             </div>
 
                             <div className='app-download-message app-text-center'>
@@ -77,6 +82,7 @@ class HomeViewStatus extends Component{
                         
                         </div>
                     </div>
+                </div>
                 </div>
         )
     }

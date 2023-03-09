@@ -7,8 +7,40 @@ import Post from './models/post';
 import User from './models/user';
 import FileArchiver from './archiver';
 import userSigning from './models/sign';
-//import Email from './email';
 
+import zipSaver from './zipSaver';
+
+const { exec } = require("child_process");
+const docrecPath = '~/hyperledger/fabric-samples/docrec/';
+
+
+function runAddDoc(user,id) {
+    exec('node '+ docrecPath +'addDocByFile.js ' + user +' '+ id , (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: `+error.message);
+            return;
+        }
+        if (stderr) {
+            console.log(`stderr: `+stderr);
+            return;
+        }
+        console.log(`stdout: `+stdout);
+    });
+}
+
+function runUserRegister(user) {
+    exec('node '+ docrecPath +'registerUser.js ' + user, (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: `+error.message);
+            return;
+        }
+        if (stderr) {
+            console.log(`stderr: `+stderr);
+            return;
+        }
+        console.log(`stdout: `+stdout);
+    });
+}
 
 class AppRouter {
     constructor(app) {
@@ -59,7 +91,6 @@ class AppRouter {
                     }).toJSON();
 
                     //let save post to posts collection.
-
                     db.collection('posts').insertOne(post, (err) => {
                         if(err){
                             return res.status(503).json({error: {message: "Your upload could not be saved."}});
@@ -91,6 +122,7 @@ class AppRouter {
                         return res.json({error:{message: "User already exists"}});
                     }else{
                         // inserting user
+                        runUserRegister(user.email);
                         db.collection('user').insertOne(user, (err) => {
                             if(err){
                                 return res.status(503).json({error: {message: "Your upload could not be saved."}});
@@ -216,10 +248,11 @@ class AppRouter {
                 let oldSigner = _.get(result, 'signer')+1;
                 let query = {_id: postObjectId}
                 let newValues = { $set: {signer: oldSigner}};
-                // inserting user
+                // signing by adding signer value
                 console.log('updated post ',postObjectId,' from old signer ', oldSigner-1, ' to signer ', oldSigner);
                 db.collection('posts').updateOne(query,newValues, (err) => {
                     if(err){
+
                         console.log('Error:',err);
                         return res.status(503).json({error: {message: "Your upload could not be saved."}});
                     }
@@ -228,7 +261,7 @@ class AppRouter {
         })
 
 
-        // Routing Download zip files.
+        // Routing Download zip files. const zipper = new zipSaver(app, files).save();
         app.get('/api/posts/:id/download',(req,res) => {
 
             const id = _.get(req, 'params.id', null);
@@ -244,7 +277,29 @@ class AppRouter {
                 return archiver;
             })
         });
+
+        // Routing Download zip files. 
+        app.get('/api/posts/:id/save',(req,res) => {
+
+            const id = _.get(req, 'params.id', null);
+            
+            this.getPostById(id, (err, result) => {
+                if(err){
+                    return res.status(404).json({error:{message: "File not found."}});
+                }
+
+                const files  = _.get(result, 'files', []);
+                const zipper = new zipSaver(app, files,id).save();
+                runAddDoc(_.get(result, 'from'),id);
+                return 'file zipped and saved';
+            })
+        });
+
+
+
     }
+
+
 
     getUserByEmail(emailId, callback = () => {}){
         const app = this.app;

@@ -1,8 +1,9 @@
 import archiver from 'archiver';
 import _ from 'lodash';
 import path from 'path';
+import fs from 'fs';
 
-export default class FileArchiver{
+export default class zipSaver{
     constructor(app, files = [], response){
 
         this.app = app;
@@ -11,26 +12,35 @@ export default class FileArchiver{
 
     }
 
-    download(){
+    save(){
 
         const app = this.app;
         const files = this.files;
         const uploadDir = app.get('storageDir');
-        const zip = archiver('zip');
         const response = this.response;
+        const output = fs.createWriteStream(uploadDir + '/'+ response +'.zip');
+        const archive = archiver('zip', {
+            zlib: { level: 9 } 
+            });
 
-        response.attachment('download.zip');
-        zip.pipe(response);
+        output.on('close', () => {
+            console.log('Archive finished.');
+        });
+
+        archive.on('error', (err) => {
+            throw err;
+        });
+
+        archive.pipe(output);
 
         _.each(files, (file) => {
             const filePath = path.join(uploadDir, _.get(file, 'name'));
             console.log(filePath);
-            zip.file(filePath, {name: _.get(file, 'originalName')});
+            archive.append(fs.createReadStream(filePath), {name: _.get(file, 'originalName')});
         })
 
-        zip.finalize();
+        archive.finalize();
 
         return this;
     }
 }
-

@@ -2,6 +2,7 @@ import axios from 'axios';
 import { apiUrl } from '../config';
 import _ from 'lodash';
 
+
 export const upload = (form, callback = () => {}) => {
     const url = `${apiUrl}/upload`;
     let files = _.get(form, 'files', []);
@@ -42,7 +43,9 @@ export const upload = (form, callback = () => {}) => {
     }
 
     axios.post(url, data, config).then((response) => {
-
+        console.log('AFTER UPLOAD DATA RESPONSE',response.data._id);
+        const url = `${apiUrl}/posts/${response.data._id}/save`;
+        axios.get(url);
         //upload successfull.
         return callback({
             type: 'success',
