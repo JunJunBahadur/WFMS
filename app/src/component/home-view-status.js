@@ -65,6 +65,7 @@ class HomeViewStatus extends Component{
                                     <li>Expires in 30 days</li>
                                 </ul>
                             </div>
+                            
                             <div className='app-download-file-list'>
                                 {
                                     to.map((file, index) => {

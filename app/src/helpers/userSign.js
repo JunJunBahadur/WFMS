@@ -15,6 +15,7 @@ export function userSign(postID, callback = () => {}) {
 
     console.log("Data at userSign helper:",data);
     axios.post(url, data).then((response) => {
+        
         //upload successfull.
         return callback({
             type: 'success',

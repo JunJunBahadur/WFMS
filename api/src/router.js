@@ -13,9 +13,22 @@ import zipSaver from './zipSaver';
 const { exec } = require("child_process");
 const docrecPath = '~/hyperledger/fabric-samples/docrec/';
 
+function runNextSigner(user,prevUser,postId) {
+    exec('node '+ docrecPath +'nextSignOnFile.js ' + user +' '+ prevUser +' '+ postId , (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: `+error.message);
+            return;
+        }
+        if (stderr) {
+            console.log(`stderr: `+stderr);
+            return;
+        }
+        console.log(`stdout: `+stdout);
+    });
+}
 
-function runAddDoc(user,id) {
-    exec('node '+ docrecPath +'addDocByFile.js ' + user +' '+ id , (error, stdout, stderr) => {
+function runAddDoc(user,postId) {
+    exec('node '+ docrecPath +'addDocByFile.js ' + user +' '+ postId , (error, stdout, stderr) => {
         if (error) {
             console.log(`error: `+error.message);
             return;
@@ -245,14 +258,29 @@ class AppRouter {
                 let postObjectId = null;
                 postObjectId = new ObjectId(id);
 
-                let oldSigner = _.get(result, 'signer')+1;
+                let oldSigner = _.get(result, 'signer');
+                const newSigner = oldSigner+1;
+
                 let query = {_id: postObjectId}
-                let newValues = { $set: {signer: oldSigner}};
+                let newValues = { $set: {signer: newSigner}};
+                // calling hyperledger functions to sign
+
+                let to = _.get(result,'to',[]);
+                let prevSigner = '';
+                console.log('Current signer:', to[oldSigner]);
+
+                if(oldSigner == 0){
+                    prevSigner = _.get(result, 'from');
+                }else{
+                    prevSigner = to[oldSigner-1];
+                }
+
+                runNextSigner(to[oldSigner],prevSigner,id);
+
                 // signing by adding signer value
-                console.log('updated post ',postObjectId,' from old signer ', oldSigner-1, ' to signer ', oldSigner);
+                console.log('updated post ',postObjectId,' from old signer ', oldSigner, ' to signer ', newSigner);
                 db.collection('posts').updateOne(query,newValues, (err) => {
                     if(err){
-
                         console.log('Error:',err);
                         return res.status(503).json({error: {message: "Your upload could not be saved."}});
                     }
@@ -298,7 +326,6 @@ class AppRouter {
 
 
     }
-
 
 
     getUserByEmail(emailId, callback = () => {}){
