@@ -41,6 +41,7 @@ class HomeViewStatus extends Component{
     render(){
         const { post } = this.state;
         const to = _.get(post, 'to', []);
+        const sign = _.get(post, 'toSignatures', []);
         to.pop();
         console.log('typeof',typeof(to),'value',post);
         const postId = _.get(post, '_id', null);
@@ -72,6 +73,7 @@ class HomeViewStatus extends Component{
                                         return(
                                             <div key={index} className='app-download-file-list-item'>
                                                 <div className='filename'>{file}</div>
+                                                <div className='filename'>{sign[index]}</div>
                                                 <div className='download-action'>{
                                                     index < signer ? <div>Approved</div> : <div>Not yet Approved</div>
                                                 }</div>

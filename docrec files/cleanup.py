@@ -2,7 +2,7 @@ import json
 import sys
 
 
-f1 = open(sys.argv[1]+'c','r')
+f1 = open(sys.argv[1],'r')
 f2 = open(sys.argv[1]+'cert.txt','w')
 
 str = f1.read()

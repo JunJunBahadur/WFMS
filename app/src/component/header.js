@@ -61,6 +61,9 @@ class Header extends Component{
                         this.props.toSent();
                     }}>Sent</button>
                     <button onClick={()=>{
+                        this.props.toValidate();
+                    }}>Verify</button>
+                    <button onClick={()=>{
                         localStorage.removeItem('login');
                         this.PublicClientApplication.logoutRedirect();
                         window.location.reload();

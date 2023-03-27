@@ -10,21 +10,19 @@ import userSigning from './models/sign';
 
 import zipSaver from './zipSaver';
 
+const util = require('util');
 const { exec } = require("child_process");
+const execW = util.promisify(require('child_process').exec);
 const docrecPath = '~/hyperledger/fabric-samples/docrec/';
 
-function runNextSigner(user,prevUser,postId) {
-    exec('node '+ docrecPath +'nextSignOnFile.js ' + user +' '+ prevUser +' '+ postId , (error, stdout, stderr) => {
-        if (error) {
-            console.log(`error: `+error.message);
-            return;
-        }
-        if (stderr) {
-            console.log(`stderr: `+stderr);
-            return;
-        }
-        console.log(`stdout: `+stdout);
-    });
+async function runValidateDoc(user,prevUser,postId) {
+    const { stdout } = await execW('node '+ docrecPath +'nextSignOnFile.js ' + user +' '+ prevUser +' '+ postId);
+    return Promise.resolve(stdout);
+}
+
+async function runNextSigner(user,prevUser,postId) {
+    const { stdout } = await execW('node '+ docrecPath +'nextSignOnFile.js ' + user +' '+ prevUser +' '+ postId);
+    return Promise.resolve(stdout);
 }
 
 function runAddDoc(user,postId) {
@@ -235,8 +233,22 @@ class AppRouter {
                 }
 
                 return res.json(result);
-            })
+            });
 
+        });
+
+        //Routing for validation
+        app.get('/api/validate/:data', (req,res) => {
+            const data = _.get(req, 'params.data');
+            
+            let form = data.split(' separator ');
+            const email = data[0];
+            const signature = data[1];
+            console.log('Form at router validate:', form);
+
+            runValidateDoc(email, signature).then((x) => {
+                console.log('Run Validate Doc result:', x);
+            });
         });
 
         //Routing for updating post /api/posts/update/:id
@@ -261,22 +273,23 @@ class AppRouter {
                 let oldSigner = _.get(result, 'signer');
                 const newSigner = oldSigner+1;
 
-                let query = {_id: postObjectId}
-                let newValues = { $set: {signer: newSigner}};
                 // calling hyperledger functions to sign
-
+                
                 let to = _.get(result,'to',[]);
                 let prevSigner = '';
                 console.log('Current signer:', to[oldSigner]);
-
+                
                 if(oldSigner == 0){
                     prevSigner = _.get(result, 'from');
                 }else{
                     prevSigner = to[oldSigner-1];
                 }
 
-                runNextSigner(to[oldSigner],prevSigner,id);
+                let signature = '';
 
+                let query = {_id: postObjectId}
+                let newValues = { $set: {signer: newSigner}};
+                
                 // signing by adding signer value
                 console.log('updated post ',postObjectId,' from old signer ', oldSigner, ' to signer ', newSigner);
                 db.collection('posts').updateOne(query,newValues, (err) => {
@@ -285,6 +298,26 @@ class AppRouter {
                         return res.status(503).json({error: {message: "Your upload could not be saved."}});
                     }
                 });
+
+                runNextSigner(to[oldSigner],prevSigner,id).then((x) => {
+                    let sigPart = x.split("Signature: ");
+                    let removingTrxsub = sigPart[2].split("Transaction");
+                    signature = removingTrxsub[0];
+                    console.log('signature at router update:', signature);
+
+                    let query = {_id: postObjectId};
+                    let newValues = { $set: {[`toSignatures.${oldSigner}`]: signature}};
+                    
+                    // signature added to post
+                    console.log('updated post ',postObjectId,' from old signer ', oldSigner, ' to signer ', newSigner);
+                    db.collection('posts').updateOne(query,newValues, (err) => {
+                        if(err){
+                            console.log('Error:',err);
+                            return res.status(503).json({error: {message: "Your upload could not be saved."}});
+                        }
+                    });
+                });
+
             });
         })
 

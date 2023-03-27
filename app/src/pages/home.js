@@ -7,6 +7,7 @@ import HomeInbox from '../component/home-inbox';
 import HomeViewFile from '../component/home-view-file';
 import HomeSent from '../component/home-sent';
 import HomeViewStatus from '../component/home-view-status';
+import HomeValidate from '../component/home-validate';
 import _ from 'lodash';
 
 class Home extends Component{
@@ -64,6 +65,9 @@ class Home extends Component{
 
             case 'HomeViewStatus':
                 return <HomeViewStatus data={data} />
+
+            case 'HomeValidate':
+                return <HomeValidate />
 
             case 'HomeForm':
 
@@ -132,6 +136,12 @@ class Home extends Component{
                     toSent={()=>{
                         this.setState({
                             componentName: 'HomeSent'
+                        })
+                    }}
+
+                    toValidate={()=>{
+                        this.setState({
+                            componentName: 'HomeValidate'
                         })
                     }}
                     

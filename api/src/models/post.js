@@ -9,6 +9,7 @@ class Post{
         this.model = {
             from: null,
             to: [],
+            toSignatures: [],
             message: null,
             signer: 0,
             subject: null,
